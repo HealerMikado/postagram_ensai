@@ -32,20 +32,15 @@ Vous utiliserez en plus :
 
 Votre but n'est pas de réaliser l'intégralité de l'application, mais seulement la partie création d'une publication et détection des labels via le service **Amazon Rekognition**, récupération des publications et suppression des publications. Le reste vous est déjà donné. Ainsi vous avez à votre disposition:
 
-- Une application web écrite en Reactjs (le dossier webapp) qui va communiquer avec votre application. Aucune connaissance en Reactjs n'est attendue, ce code est uniquement là pour requêter votre webservice. Vous avez néanmoins à modifier la ligne 12 du fichier index.js pour mettre à la place l'adresse de votre Load Balancer quand vous testerez votre code sur AWS. Attention l'url ne doit pas avoir de / à la fin !! Pour lancer cette application placez vous dans le dossier webapp et faites **npm install** la première fois puis un npm start ensuite. 
+- Une application web écrite en Reactjs (le dossier webapp) qui va communiquer avec votre application. Aucune connaissance en Reactjs n'est attendue, ce code est uniquement là pour requêter votre webservice. Vous avez néanmoins à modifier la ligne 12 du fichier index.js pour mettre à la place l'adresse de votre Load Balancer quand vous testerez votre code sur AWS. Attention l'url ne doit pas avoir de / à la fin !! Pour lancer cette application placez vous dans le dossier webapp et faites **npm install** la première fois puis un **npm start** ensuite. 
 - Une base de webservice avec tous les endpoints de définis. Vous allez devoir définir les fonctions vides. Ce web service contient la fonction qui permet de générer une URL présignée pour S3. Ne la touchez pas ! Pour lancer le webservice faites un `python3 app.py`. Le webservice se lance sur le port 8080.
 - Une base de projet Terraform à compléter
 
-Le code est à récupérer avec un `git clone https://github.com/HealerMikado/postagram_ensai.git`
+Le code est à récupérer avec un `git clone https://github.com/HealerMikado/postagram_ensai.git`. Commencez par faire un fork du code pour travailler en groupe, avant de le cloner. 
 
-Cet exercice est à faire par groupe de 3 max. Vous pouvez ainsi le faire seul à deux ou à trois. Vous noterez les membres du groupe dans un fichier `groupe.md` même si vous êtes seul ! Vous rendrez une Moodle une archive .zip contenant tout le code du projet (scripts terraform et le code du webservice). A la différence de l’exercice précédent, votre code ne peut pas fonctionner tel quel. Il n'est pas possible d'injecter dans les instances EC2 le nom du bucket et de la table dynamoDB directement. Vous allez ainsi devoir réaliser 2 scripts terraform :
+Cet exercice est à faire par groupe de 3 max. Vous pouvez ainsi le faire seul à deux ou à trois. Vous noterez les membres du groupe dans un fichier `groupe.md` même si vous êtes seul ! Vous rendrez une Moodle une archive .zip contenant tout le code du projet (scripts terraform et le code du webservice). Le code open tofu est décomposé en plusieurs fichiers, chacun ne se concentrant que sur une fonctionnalité. Je vous ai donné une ossature à compléter. Pour éviter les problème lors du lancement des fichiers, beaucoup de code sont commentés. À vous de les décommenter pour les remplir.
 
-- Le premier avec l'architecture *serverless* : bucket S3, lambda et DynamoDB qui devra avoir 2 terraform output avec le bucket S3 généré et la table dynamoDB
-- Le second avec l'architecture avec serveur : EC2, auto scalling group et load balancer. Vous mettrez à jours les variables `bucket` et `dynamo_table` avec les variables qui proviendront du premier script. Ces variables seront injectées comme variables d'environnement dans les instances EC2 pour être accessible avec `os.getenv()`. Pendant la phase de développement sur votre machine, mettez à jour le fichier `.env`
-
-Pour exécuter un fichier spécifique faites, `cdktf deploy -a python mon_script.py`
-
-Si vous faites ce projet en groupe, je vous encourage à rapidement mettre en place un dépôt git et à travailler en parallèle.
+Pour exécuter votre code faites un `tofu init` pour initialiser votre dossier, puis `tofu apply` pour déployer.
 
 Voici le macro-barème qui sera appliqué si vous êtes 3 :
 
@@ -54,13 +49,13 @@ Voici le macro-barème qui sera appliqué si vous êtes 3 :
 - Vous avez la possibilité de poster et afficher des publications : 14
 - Vous avez seulement la partie création de publication : 10
 
-Je pars du principe que le code python est propre à chaque fois et que le template Terraform fonctionne. Je n'attends pas des commentaires partout, mais un code lisible (variables signifiantes à minima).
+Je pars du principe que le code python est propre à chaque fois et que le template OpenTofu fonctionne. Je n'attends pas des commentaires partout, mais un code lisible (variables signifiantes à minima).
 
 Si vous faites ce travail seul ou à deux cela sera pris en compte. Considérez que si vous êtes seul, faire la fonctionnalité de création de publications et leur récupération vaudra un 20. Si vous êtes à deux le 20 il faut ajouter la partie détection des labels.
 
 ## ✨ Aides
 
-Ce projet contient des choses que vous avez déjà vu, ainsi que des choses nouvelles. VVoici de nombreux exemples de code pour vous aider. N’hésitez pas à retourner dans le cours ou à aller sur Internet. Bien entendu, ce ne sont que des aides, et pas la solution à l'exercice.
+Ce projet contient des choses que vous avez déjà vu, ainsi que des choses nouvelles. Vsoici de nombreux exemples de code pour vous aider. N’hésitez pas à retourner dans le cours ou à aller sur Internet. Bien entendu, ce ne sont que des aides, et pas la solution à l'exercice.
 
 ### 💣Comment attaquer le problème
 
@@ -74,12 +69,12 @@ Vous avez trois choses à faire :
 
 Je vous conseille de faire ce travail dans cet ordre :
 
-1. Créer le code terraform pour créer le bucket s3 et la base dynamoDB
-2. Faites la partie création de posts et leur récupération
-3. Mettez à jour le code Terraform pour ajouter une lambda qui se déclenche quand un fichier est déposé dans le bucket
+1. Créez le code OpenTofu pour créer le bucket s3 et la base dynamoDB (fichiers **s3.tf** et **dynamodb.tf**)
+2. Faites la partie création de posts et leur récupération en local sans essayer de le déployer. Lancer votre code en vous mettant dans le dossier webservice et faites un `python3 app.py` (commencez par installer les librairies nécessaires avec `python3 -m venv venv`, activez votre venv et `pip install requirements.txt`)
+3. Mettez à jour le code OpenTofu pour ajouter une lambda qui se déclenche quand un fichier est déposé dans le bucket (fichier **lambda.tf**)
 4. Implémentez la lambda via l'interface graphique d'AWS
-5. Récupérez le code et mettez votre script Terraform à jour
-6. Finissez le code Terraform pour déployer un webservice python comme dans le TP 2
+5. Récupérez le code que vous mettez dans le fichier **open tofu/lambda/lambda_function** et mettez votre script OpenTofu à jour
+6. Finissez le code OpenTofu pour déployer un webservice python comme dans le TP 2
 
 Faire fonctionner votre code avec l'IHM peut s'avérer complexe car l'IHM attend les données dans le format des posts donné ci-dessous. Si vous n'arrivez pas à faire fonctionner votre code avec l'interface, **ce n'est pas grave** ! Faites le fonctionner avec Insomnia, Postman ou des requêtes http en python via `request`.
 
@@ -105,7 +100,7 @@ La donnée au coeur de votre application est un post. Un post pourra avoir les d
 
 ### 📚Base Dynamodb
 
-Votre base Dynamodb aura comme clé de partition les utilisateurs, et comme clé de tri l'id des posts. Pour éviter tout chevauchement entre les concepts, je valoriserai les groupes qui préfixent ses deux attributs comme dans le TP 4. Exemple post = `POST#....`, user= `USER#....` 
+Votre base Dynamodb aura comme clé de partition les noms utilisateurs, et comme clé de tri l'id des posts. Pour éviter tout chevauchement entre les concepts, je valoriserai les groupes qui préfixent ses deux attributs comme dans le TP 4. Exemple post = `POST#....`, user= `USER#....` 
 
 Pour les attributs des objets que vous allez stocker, je vous conseiller de reprendre ceux du json des posts.
 
@@ -157,7 +152,7 @@ Quand vous retournez des posts, pour que l'interface fonctionne correctement, un
  }
 ```
 
-L'id, le titre et le body ne demandent pas d'explication. Image est une url vers l'image S3. Comme votre bucket sera privé, pour récupérer une image il vous faut une url pré-signée. Voici un exemple de code :
+L'id, le titre et le body ne demandent pas d'explication. Image est une url vers l'image S3. Comme votre bucket sera privé, pour récupérer une image il vous faut une url pré-signée. Voici un exemple de code pour générer une url présignée:
 
 ```python
 def create_presigned_url(bucket_name, object_name, expiration=3600):
@@ -224,34 +219,47 @@ return data
 Dans le template fournit, un bucket S3 est déjà défini. La détection des labels sera exécutée dés qu'un objet sera uploadé sur S3. Pour faire cela, la lambda ne doit pas être déclenchée par une file  SQS comme dans un TP précédent, mais par la création d'un objet sur S3. Voici un exemple pour vous aider :
 
 ```python
-from cdktf_cdktf_provider_aws.s3_bucket_notification import S3BucketNotification, S3BucketNotificationLambdaFunction
-from cdktf_cdktf_provider_aws.lambda_permission import LambdaPermission
+#Package the Lambda function code
+data "archive_file" "lambda_dir" {
+  type        = "zip"
+  source_dir = "${path.module}/lambda"
+  output_path = "${path.module}/output/function.zip"
+}
 
-bucket = S3Bucket(
-    self, "bucket"
-)
-lambda_function = LambdaFunction(self,"lambda")
-permission = LambdaPermission(
-    self, "lambda_permission",
-    action="lambda:InvokeFunction",
-    statement_id="AllowExecutionFromS3Bucket",
-    function_name=lambda_function.arn,
-    principal="s3.amazonaws.com",
-    source_arn=bucket.arn,
-    source_account=account_id,
-    depends_on=[lambda_function, bucket]
-)
+# Lambda function
+resource "aws_lambda_function" "lambda_function" {
+  filename         = data.archive_file.lambda_dir.output_path
+  function_name    = ""
+  role             = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
+  handler          = "lambda_function.lambda_handler"
+  source_code_hash = data.archive_file.example.output_base64sha256
+  memory_size = 512
+  timeout     = 30
 
-notification = S3BucketNotification(
-    self, "notification",
-    lambda_function=[S3BucketNotificationLambdaFunction(
-        lambda_function_arn=lambda_function.arn,
-        events=["s3:ObjectCreated:*"]
-    )],
-    bucket=bucket.id,
-    depends_on=[permission]
-)
+  runtime = "python3.13"
+}
 
+
+#A décommenter une fois la fonction lambda faite
+resource "aws_lambda_permission" "allow_from_S3" {
+action="lambda:InvokeFunction"
+            statement_id="AllowExecutionFromS3Bucket"
+            function_name=aws_lambda_function.lambda_function.name
+            principal="s3.amazonaws.com"
+            source_arn=aws_s3_bucket.bucket.arn
+            source_account=data.aws_caller_idaccount_identity.current.account_id
+            depends_on=[lambda_function, bucket]
+}
+
+#A décommenté une fois la fonction lambda faite ET le bucket s3 fait
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = aws_s3_bucket.bucket.id
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.lambda_function.arn
+    events=["s3:ObjectCreated:*"]
+  }
+  depends_on = [aws_lambda_permission.allow_from_S3]
+}
 ```
 
 Le code qui gère l'uploade des fichiers les met dans votre bucket à l'adresse : `user/id_publication/image_name`. Comme votre fonction est déclenchée par l'ajout dans objet dans un bucket, l'event va être différent de celui d'une file SQS.
@@ -408,9 +416,8 @@ return table.delete_item()
 
 ### 💻 Auto scaling group, Load Balancer, instances EC2, webservice
 
-Cette architecture est gérée par le fichier `main_server.py`. Le script contient déjà de quoi créer les users data pour installer le code du webservice sur une instance EC2. Vous devez remplir la configuration des différents éléments (globalement la même que dans le TP2). Les différences :
+Cette architecture est gérée par le fichier `infra_ec2.tf`. Le script contient déjà de quoi créer les users data pour installer le code du webservice sur une instance EC2. Vous devez remplir la configuration des différents éléments (globalement la même que dans le TP2). Les différences :
 
 - Une seule machine de base au lieu de 2
 - Le webservice écoutera sur le port 8080 et pas 80 comme dans le TP. Vous allez devoir changer le port de du `LbTargetGroup`
-- Pour que vos instances EC2 aient le droit d’interagir avec S3 et DynamoDB il faut leur donner les droits. Cela passe par l'attribut iam_instance_profile de la classe `LaunchTemplate`. Cet attributs attend un dictionnaire en paramètre `{"arn" : "arn_du_role"}`. Le rôle que vous passerez sera le même rôle que pour la lambda. 
-s
+- Pour que vos instances EC2 aient le droit d’interagir avec S3 et DynamoDB il faut leur donner les droits. Cela passe par l'attribut `iam_instance_profile`
