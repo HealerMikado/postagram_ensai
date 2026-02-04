@@ -18,3 +18,9 @@
 #     type = "S"
 #   }
 # }
+
+# A décommenter quand la table est définie !!
+# output "dynamotablename" {
+#   description = "The postagram bucket name"
+#   value       = aws_dynamodb_table.basic-dynamodb-table.name
+# }

@@ -16,7 +16,7 @@ variable "git_repo" {
 #   instance_type = ""
 #   key_name      = ""
 #   iam_instance_profile {
-#     arn = "" #<- à remplacer par l'arn du rôle LabRole, aller voir comment c'est fait dans le fichier lambda.tf
+    # name = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:instance-profile/LabRole" <- NE PAS MODIFIER
 #   }
 
 #   user_data = templatefile("${path.module}/user_data.sh", {
