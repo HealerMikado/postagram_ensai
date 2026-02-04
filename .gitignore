@@ -1,4 +1,4 @@
 .DS_Store
 
-open tofu/.terraform
-open tofu/.terraform.lock.hcl
+openTofu/.terraform
+openTofu/.terraform.lock.hcl

@@ -3,7 +3,7 @@
 
 variable "git_repo" {
   type = string
-  default = "https://github.com/HealerMikado/postagram_ensai.git" # <- a remplacer par l'url de votre dépôt git
+  default = "https://github.com/Bapt1st3/projet_cloud_2.git"
 }
 
 ########################################
