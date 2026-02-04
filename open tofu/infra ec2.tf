@@ -15,14 +15,14 @@ variable "git_repo" {
 #   image_id      = ""
 #   instance_type = ""
 #   key_name      = ""
-#   iam_instance_profile = {
+#   iam_instance_profile {
 #     arn = "" #<- à remplacer par l'arn du rôle LabRole, aller voir comment c'est fait dans le fichier lambda.tf
 #   }
 
 #   user_data = templatefile("${path.module}/user_data.sh", {
 #     git_repo = var.git_repo
 #     dynamo_table = aws_dynamodb_table.basic-dynamodb-table.name
-#     bucket = aws_s3_bucket.bucket.name
+#     bucket = aws_s3_bucket.bucket.bucket
 #   })
 
 #   vpc_security_group_ids = [aws_security_group.web_sg.id]

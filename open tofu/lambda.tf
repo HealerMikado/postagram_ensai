@@ -14,7 +14,7 @@
 #   function_name    = ""
 #   role             = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/LabRole"
 #   handler          = "lambda_function.lambda_handler"
-#   source_code_hash = data.archive_file.example.output_base64sha256
+#   source_code_hash = data.archive_file.lambda_dir.output_base64sha256
 #   memory_size = 512
 #   timeout     = 30
 
@@ -38,12 +38,13 @@
 # resource "aws_lambda_permission" "allow_from_S3" {
 # action="lambda:InvokeFunction"
 #             statement_id="AllowExecutionFromS3Bucket"
-#             function_name=aws_lambda_function.lambda_function.name
+#             function_name=aws_lambda_function.lambda_function.function_name
 #             principal="s3.amazonaws.com"
 #             source_arn=aws_s3_bucket.bucket.arn
-#             source_account=data.aws_caller_idaccount_identity.current.account_id
-#             depends_on=[lambda_function, bucket]
+#             source_account=data.aws_caller_identity.current.account_id
+#             depends_on=[aws_lambda_function.lambda_function, aws_s3_bucket.bucket]
 # }
+
 
 # A décommenté une fois la fonction lambda faite ET le bucket s3 fait
 # resource "aws_s3_bucket_notification" "bucket_notification" {
